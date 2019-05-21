@@ -106,7 +106,7 @@ class InstructionsPage extends React.Component {
                               itemProp="acceptedAnswer"
                               itemScope
                               itemType="http://schema.org/Answer"
-                              aria-hidden={!this.state['other-options']}
+                              aria-hidden={!this.state.q1}
                             >
                               <div itemProp="text">
                                 <p>

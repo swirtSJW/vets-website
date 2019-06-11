@@ -325,6 +325,7 @@ const formConfig = {
             },
           },
           uiSchema: {
+            'ui:description': PrefillMessage,
             gender: {
               'ui:title': 'Gender',
               'ui:options': {
@@ -434,6 +435,7 @@ const formConfig = {
           title: 'Contact information',
           initialData: {},
           uiSchema: {
+            'ui:description': PrefillMessage,
             'ui:validations': [
               validateMatch('email', 'view:emailConfirmation'),
             ],

@@ -65,6 +65,7 @@ import ErrorMessage from '../components/ErrorMessage';
 import InsuranceProviderView from '../components/InsuranceProviderView';
 import DependentView from '../components/DependentView';
 import DemographicField from '../components/DemographicField';
+import MilSvcAddlInfoField from '../components/MilSvcAddlInfoField';
 
 import {
   createDependentSchema,
@@ -513,53 +514,64 @@ const formConfig = {
           title: 'Service history',
           uiSchema: {
             'ui:title': 'Service history',
-            'ui:description': 'Check all that apply to you.',
-            purpleHeartRecipient: {
-              'ui:title': 'Purple Heart award recipient',
-            },
-            isFormerPow: {
-              'ui:title': 'Former Prisoner of War',
-            },
-            postNov111998Combat: {
-              'ui:title':
-                'Served in combat theater of operations after November 11, 1998',
-            },
-            disabledInLineOfDuty: {
-              'ui:title':
-                'Discharged or retired from the military for a disability incurred in the line of duty',
-            },
-            swAsiaCombat: {
-              'ui:title':
-                'Served in Southwest Asia during the Gulf War between August 2, 1990, and Nov 11, 1998',
-            },
-            vietnamService: {
-              'ui:title':
-                'Served in Vietnam between January 9, 1962, and May 7, 1975',
-            },
-            exposedToRadiation: {
-              'ui:title': 'Exposed to radiation while in the military',
-            },
-            radiumTreatments: {
-              'ui:title':
-                'Received nose/throat radium treatments while in the military',
-            },
-            campLejeune: {
-              'ui:title':
-                'Served on active duty at least 30 days at Camp Lejeune from January 1, 1953, through December 31, 1987',
+            'ui:description': !environment.isProduction()
+              ? MilitaryPrefillMessage
+              : undefined,
+            'view:milSvcAddlInfoCategories': {
+              'ui:field': MilSvcAddlInfoField,
+              'ui:description': 'Check all that apply to you.',
+              purpleHeartRecipient: {
+                'ui:title': 'Purple Heart award recipient',
+              },
+              isFormerPow: {
+                'ui:title': 'Former Prisoner of War',
+              },
+              postNov111998Combat: {
+                'ui:title':
+                  'Served in combat theater of operations after November 11, 1998',
+              },
+              disabledInLineOfDuty: {
+                'ui:title':
+                  'Discharged or retired from the military for a disability incurred in the line of duty',
+              },
+              swAsiaCombat: {
+                'ui:title':
+                  'Served in Southwest Asia during the Gulf War between August 2, 1990, and Nov 11, 1998',
+              },
+              vietnamService: {
+                'ui:title':
+                  'Served in Vietnam between January 9, 1962, and May 7, 1975',
+              },
+              exposedToRadiation: {
+                'ui:title': 'Exposed to radiation while in the military',
+              },
+              radiumTreatments: {
+                'ui:title':
+                  'Received nose/throat radium treatments while in the military',
+              },
+              campLejeune: {
+                'ui:title':
+                  'Served on active duty at least 30 days at Camp Lejeune from January 1, 1953, through December 31, 1987',
+              },
             },
           },
           schema: {
             type: 'object',
             properties: {
-              purpleHeartRecipient,
-              isFormerPow,
-              postNov111998Combat,
-              disabledInLineOfDuty,
-              swAsiaCombat,
-              vietnamService,
-              exposedToRadiation,
-              radiumTreatments,
-              campLejeune,
+              'view:milSvcAddlInfoCategories': {
+                type: 'object',
+                properties: {
+                  purpleHeartRecipient,
+                  isFormerPow,
+                  postNov111998Combat,
+                  disabledInLineOfDuty,
+                  swAsiaCombat,
+                  vietnamService,
+                  exposedToRadiation,
+                  radiumTreatments,
+                  campLejeune,
+                },
+              },
             },
           },
         },

@@ -625,6 +625,7 @@ const formConfig = {
           title: 'VA benefits',
           uiSchema: {
             'ui:title': 'Current compensation',
+            'ui:description': PrefillMessage,
             vaCompensationType: {
               'ui:title':
                 'Which type of VA compensation do you currently receive?',

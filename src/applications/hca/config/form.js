@@ -66,6 +66,7 @@ import InsuranceProviderView from '../components/InsuranceProviderView';
 import DependentView from '../components/DependentView';
 import DemographicField from '../components/DemographicField';
 import MilSvcAddlInfoField from '../components/MilSvcAddlInfoField';
+import SubField from '../components/SubField';
 
 import {
   createDependentSchema,
@@ -660,24 +661,36 @@ const formConfig = {
           title: 'Financial disclosure',
           uiSchema: {
             'ui:title': 'Financial disclosure',
-            'ui:description': financialDisclosureText,
-            discloseFinancialInformation: {
-              'ui:title': 'Do you want to provide your financial information?',
-              'ui:widget': 'yesNo',
-            },
-            'view:noDiscloseWarning': {
-              'ui:description': disclosureWarning,
-              'ui:options': {
-                hideIf: form => form.discloseFinancialInformation !== false,
+            'ui:description': PrefillMessage,
+            'view:discloseFinancialInfo': {
+              'ui:field': SubField,
+              'ui:description': financialDisclosureText,
+              discloseFinancialInformation: {
+                'ui:title':
+                  'Do you want to provide your financial information?',
+                'ui:widget': 'yesNo',
+              },
+              'view:noDiscloseWarning': {
+                'ui:description': disclosureWarning,
+                'ui:options': {
+                  hideIf: form =>
+                    form.discolseFinancialInfo.discloseFinancialInformation !==
+                    false,
+                },
               },
             },
           },
           schema: {
             type: 'object',
-            required: ['discloseFinancialInformation'],
             properties: {
-              discloseFinancialInformation,
-              'view:noDiscloseWarning': emptyObjectSchema,
+              'view:discloseFinancialInfo': {
+                type: 'object',
+                required: ['discloseFinancialInformation'],
+                properties: {
+                  discloseFinancialInformation,
+                },
+                'view:noDiscloseWarning': emptyObjectSchema,
+              },
             },
           },
         },

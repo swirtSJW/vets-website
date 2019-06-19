@@ -978,6 +978,7 @@ const formConfig = {
           title: 'Medicaid or Medicare coverage',
           initialData: {},
           uiSchema: {
+            'ui:description': PrefillMessage,
             isMedicaidEligible: {
               'ui:title': 'Are you eligible for Medicaid?',
               'ui:description': medicaidDescription,
@@ -1016,6 +1017,7 @@ const formConfig = {
           title: 'Other coverage',
           uiSchema: {
             'ui:title': 'Other coverage',
+            'ui:description': PrefillMessage,
             isCoveredByHealthInsurance: {
               'ui:title':
                 'Are you covered by health insurance? (Including coverage through a spouse or another person)',
@@ -1089,6 +1091,7 @@ const formConfig = {
           },
           uiSchema: {
             'ui:title': 'VA Facility',
+            'ui:description': PrefillMessage,
             isEssentialAcaCoverage: {
               'ui:title': isEssentialAcaCoverageDescription,
             },

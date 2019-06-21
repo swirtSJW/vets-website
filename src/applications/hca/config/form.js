@@ -64,8 +64,6 @@ import ErrorMessage from '../components/ErrorMessage';
 import InsuranceProviderView from '../components/InsuranceProviderView';
 import DependentView from '../components/DependentView';
 import DemographicField from '../components/DemographicField';
-import MilSvcAddlInfoField from '../components/MilSvcAddlInfoField';
-import SubField from '../components/SubField';
 
 import {
   createDependentSchema,
@@ -516,7 +514,6 @@ const formConfig = {
               ? MilitaryPrefillMessage
               : undefined,
             'view:milSvcAddlInfoCategories': {
-              'ui:field': MilSvcAddlInfoField,
               'ui:description': 'Check all that apply to you.',
               purpleHeartRecipient: {
                 'ui:title': 'Purple Heart award recipient',
@@ -556,20 +553,15 @@ const formConfig = {
           schema: {
             type: 'object',
             properties: {
-              'view:milSvcAddlInfoCategories': {
-                type: 'object',
-                properties: {
-                  purpleHeartRecipient,
-                  isFormerPow,
-                  postNov111998Combat,
-                  disabledInLineOfDuty,
-                  swAsiaCombat,
-                  vietnamService,
-                  exposedToRadiation,
-                  radiumTreatments,
-                  campLejeune,
-                },
-              },
+              purpleHeartRecipient,
+              isFormerPow,
+              postNov111998Combat,
+              disabledInLineOfDuty,
+              swAsiaCombat,
+              vietnamService,
+              exposedToRadiation,
+              radiumTreatments,
+              campLejeune,
             },
           },
         },
@@ -659,8 +651,7 @@ const formConfig = {
           uiSchema: {
             'ui:title': 'Financial disclosure',
             'ui:description': PrefillMessage,
-            'view:discloseFinancialInfo': {
-              'ui:field': SubField,
+            'view:financialDisclosure': {
               'ui:description': financialDisclosureText,
               discloseFinancialInformation: {
                 'ui:title':
@@ -671,8 +662,8 @@ const formConfig = {
                 'ui:description': disclosureWarning,
                 'ui:options': {
                   hideIf: form =>
-                    form.discolseFinancialInfo.discloseFinancialInformation !==
-                    false,
+                    form['view:financialDisclosure']
+                      .discloseFinancialInformation !== false,
                 },
               },
             },
@@ -680,13 +671,13 @@ const formConfig = {
           schema: {
             type: 'object',
             properties: {
-              'view:discloseFinancialInfo': {
+              'view:financialDisclosure': {
                 type: 'object',
                 required: ['discloseFinancialInformation'],
                 properties: {
                   discloseFinancialInformation,
+                  'view:noDiscloseWarning': emptyObjectSchema,
                 },
-                'view:noDiscloseWarning': emptyObjectSchema,
               },
             },
           },
@@ -695,75 +686,86 @@ const formConfig = {
           path: 'household-information/spouse-information',
           title: 'Spouse’s information',
           initialData: {},
-          depends: formData =>
-            formData.discloseFinancialInformation &&
-            formData.maritalStatus &&
-            (formData.maritalStatus.toLowerCase() === 'married' ||
-              formData.maritalStatus.toLowerCase() === 'separated'),
+          // depends: formData =>
+          //   formData.discloseFinancialInformation &&
+          //   formData.maritalStatus &&
+          //   (formData.maritalStatus.toLowerCase() === 'married' ||
+          //     formData.maritalStatus.toLowerCase() === 'separated'),
           uiSchema: {
             'ui:title': 'Spouse’s information',
-            'ui:description':
-              'Please fill this out to the best of your knowledge. The more accurate your responses, the faster we can process your application.',
-            spouseFullName: fullNameUI,
-            spouseSocialSecurityNumber: _.merge(ssnUI, {
-              'ui:title': 'Spouse’s Social Security number',
-            }),
-            spouseDateOfBirth: currentOrPastDateUI('Date of birth'),
-            dateOfMarriage: _.assign(currentOrPastDateUI('Date of marriage'), {
-              'ui:validations': [validateMarriageDate],
-            }),
-            cohabitedLastYear: {
-              'ui:title': 'Did your spouse live with you last year?',
-              'ui:widget': 'yesNo',
-            },
-            provideSupportLastYear: {
-              'ui:title':
-                'If your spouse did not live with you last year, did you provide financial support?',
-              'ui:widget': 'yesNo',
-              'ui:options': {
-                expandUnder: 'cohabitedLastYear',
-                expandUnderCondition: false,
-              },
-            },
-            sameAddress: {
-              'ui:title': 'Do you have the same address as your spouse?',
-              'ui:widget': 'yesNo',
-            },
-            'view:spouseContactInformation': {
-              'ui:title': 'Spouse’s address and telephone number',
-              'ui:options': {
-                expandUnder: 'sameAddress',
-                expandUnderCondition: false,
-              },
-              spouseAddress: addressUI(
-                '',
-                true,
-                formData => formData.sameAddress === false,
+            'ui:description': PrefillMessage,
+            'view:spouseInformation': {
+              'ui:description':
+                'Please fill this out to the best of your knowledge. The more accurate your responses, the faster we can process your application.',
+              spouseFullName: fullNameUI,
+              spouseSocialSecurityNumber: _.merge(ssnUI, {
+                'ui:title': 'Spouse’s Social Security number',
+              }),
+              spouseDateOfBirth: currentOrPastDateUI('Date of birth'),
+              dateOfMarriage: _.assign(
+                currentOrPastDateUI('Date of marriage'),
+                {
+                  'ui:validations': [validateMarriageDate],
+                },
               ),
-              spousePhone: phoneUI(),
+              cohabitedLastYear: {
+                'ui:title': 'Did your spouse live with you last year?',
+                'ui:widget': 'yesNo',
+              },
+              provideSupportLastYear: {
+                'ui:title':
+                  'If your spouse did not live with you last year, did you provide financial support?',
+                'ui:widget': 'yesNo',
+                'ui:options': {
+                  expandUnder: 'cohabitedLastYear',
+                  expandUnderCondition: false,
+                },
+              },
+              sameAddress: {
+                'ui:title': 'Do you have the same address as your spouse?',
+                'ui:widget': 'yesNo',
+              },
+              'view:spouseContactInformation': {
+                'ui:title': 'Spouse’s address and telephone number',
+                'ui:options': {
+                  expandUnder: 'sameAddress',
+                  expandUnderCondition: false,
+                },
+                spouseAddress: addressUI(
+                  '',
+                  true,
+                  formData => formData.sameAddress === false,
+                ),
+                spousePhone: phoneUI(),
+              },
             },
           },
           schema: {
             type: 'object',
-            required: [
-              'spouseSocialSecurityNumber',
-              'spouseDateOfBirth',
-              'dateOfMarriage',
-              'sameAddress',
-            ],
             properties: {
-              spouseFullName,
-              spouseSocialSecurityNumber,
-              spouseDateOfBirth,
-              dateOfMarriage,
-              cohabitedLastYear,
-              provideSupportLastYear,
-              sameAddress,
-              'view:spouseContactInformation': {
+              'view:spouseInformation': {
                 type: 'object',
+                required: [
+                  'spouseSocialSecurityNumber',
+                  'spouseDateOfBirth',
+                  'dateOfMarriage',
+                  'sameAddress',
+                ],
                 properties: {
-                  spouseAddress: addressSchema(fullSchemaHca),
-                  spousePhone,
+                  spouseFullName,
+                  spouseSocialSecurityNumber,
+                  spouseDateOfBirth,
+                  dateOfMarriage,
+                  cohabitedLastYear,
+                  provideSupportLastYear,
+                  sameAddress,
+                  'view:spouseContactInformation': {
+                    type: 'object',
+                    properties: {
+                      spouseAddress: addressSchema(fullSchemaHca),
+                      spousePhone,
+                    },
+                  },
                 },
               },
             },
@@ -772,8 +774,10 @@ const formConfig = {
         dependentInformation: {
           path: 'household-information/dependent-information',
           title: 'Dependent information',
-          depends: data => data.discloseFinancialInformation,
+          // depends: data => data.discloseFinancialInformation,
           uiSchema: {
+            'ui:title': 'Dependent information',
+            'ui:description': PrefillMessage,
             'view:reportDependents': {
               'ui:title': 'Do you have any dependents to report?',
               'ui:widget': 'yesNo',
@@ -806,162 +810,178 @@ const formConfig = {
           path: 'household-information/annual-income',
           title: 'Annual income',
           initialData: {},
-          depends: data => data.discloseFinancialInformation,
+          // depends: data => data.discloseFinancialInformation,
           uiSchema: {
             'ui:title': 'Annual income',
-            'ui:description': incomeDescription,
-            veteranGrossIncome: _.set(
-              'ui:validations',
-              [validateCurrency],
-              currencyUI('Veteran gross annual income from employment'),
-            ),
-            veteranNetIncome: _.set(
-              'ui:validations',
-              [validateCurrency],
-              currencyUI(
-                'Veteran net income from your farm, ranch, property or business',
+            'ui:description': PrefillMessage,
+            'view:annualIncome': {
+              'ui:description': incomeDescription,
+              veteranGrossIncome: _.set(
+                'ui:validations',
+                [validateCurrency],
+                currencyUI('Veteran gross annual income from employment'),
               ),
-            ),
-            veteranOtherIncome: _.set(
-              'ui:validations',
-              [validateCurrency],
-              currencyUI('Veteran other income amount'),
-            ),
-            'view:spouseIncome': {
-              'ui:title': 'Spouse income',
-              'ui:options': {
-                hideIf: formData =>
-                  !formData.maritalStatus ||
-                  (formData.maritalStatus.toLowerCase() !== 'married' &&
-                    formData.maritalStatus.toLowerCase() !== 'separated'),
-              },
-              spouseGrossIncome: _.merge(
-                currencyUI('Spouse gross annual income from employment'),
-                {
-                  'ui:required': formData =>
-                    formData.maritalStatus &&
-                    (formData.maritalStatus.toLowerCase() === 'married' ||
-                      formData.maritalStatus.toLowerCase() === 'separated'),
-                  'ui:validations': [validateCurrency],
-                },
-              ),
-              spouseNetIncome: _.merge(
+              veteranNetIncome: _.set(
+                'ui:validations',
+                [validateCurrency],
                 currencyUI(
-                  'Spouse net income from your farm, ranch, property or business',
+                  'Veteran net income from your farm, ranch, property or business',
                 ),
-                {
-                  'ui:required': formData =>
-                    formData.maritalStatus &&
-                    (formData.maritalStatus.toLowerCase() === 'married' ||
-                      formData.maritalStatus.toLowerCase() === 'separated'),
-                  'ui:validations': [validateCurrency],
-                },
               ),
-              spouseOtherIncome: _.merge(
-                currencyUI('Spouse other income amount'),
-                {
-                  'ui:required': formData =>
-                    formData.maritalStatus &&
-                    (formData.maritalStatus.toLowerCase() === 'married' ||
-                      formData.maritalStatus.toLowerCase() === 'separated'),
-                  'ui:validations': [validateCurrency],
-                },
+              veteranOtherIncome: _.set(
+                'ui:validations',
+                [validateCurrency],
+                currencyUI('Veteran other income amount'),
               ),
-            },
-            dependents: {
-              'ui:field': 'BasicArrayField',
-              items: dependentIncomeUiSchema,
-              'ui:options': {
-                hideIf: formData => !_.get('view:reportDependents', formData),
+              'view:spouseIncome': {
+                'ui:title': 'Spouse income',
+                'ui:options': {
+                  hideIf: formData =>
+                    !formData.maritalStatus ||
+                    (formData.maritalStatus.toLowerCase() !== 'married' &&
+                      formData.maritalStatus.toLowerCase() !== 'separated'),
+                },
+                spouseGrossIncome: _.merge(
+                  currencyUI('Spouse gross annual income from employment'),
+                  {
+                    'ui:required': formData =>
+                      formData.maritalStatus &&
+                      (formData.maritalStatus.toLowerCase() === 'married' ||
+                        formData.maritalStatus.toLowerCase() === 'separated'),
+                    'ui:validations': [validateCurrency],
+                  },
+                ),
+                spouseNetIncome: _.merge(
+                  currencyUI(
+                    'Spouse net income from your farm, ranch, property or business',
+                  ),
+                  {
+                    'ui:required': formData =>
+                      formData.maritalStatus &&
+                      (formData.maritalStatus.toLowerCase() === 'married' ||
+                        formData.maritalStatus.toLowerCase() === 'separated'),
+                    'ui:validations': [validateCurrency],
+                  },
+                ),
+                spouseOtherIncome: _.merge(
+                  currencyUI('Spouse other income amount'),
+                  {
+                    'ui:required': formData =>
+                      formData.maritalStatus &&
+                      (formData.maritalStatus.toLowerCase() === 'married' ||
+                        formData.maritalStatus.toLowerCase() === 'separated'),
+                    'ui:validations': [validateCurrency],
+                  },
+                ),
+              },
+              dependents: {
+                'ui:field': 'BasicArrayField',
+                items: dependentIncomeUiSchema,
+                'ui:options': {
+                  hideIf: formData => !_.get('view:reportDependents', formData),
+                },
               },
             },
           },
           schema: {
             type: 'object',
-            required: [
-              'veteranGrossIncome',
-              'veteranNetIncome',
-              'veteranOtherIncome',
-            ],
             definitions: {
               // Override the default schema and use only the income fields
               dependent: dependentIncomeSchema,
             },
             properties: {
-              veteranGrossIncome,
-              veteranNetIncome,
-              veteranOtherIncome,
-              'view:spouseIncome': {
+              'view:annualIncome': {
                 type: 'object',
+                required: [
+                  'veteranGrossIncome',
+                  'veteranNetIncome',
+                  'veteranOtherIncome',
+                ],
                 properties: {
-                  spouseGrossIncome,
-                  spouseNetIncome,
-                  spouseOtherIncome,
+                  veteranGrossIncome,
+                  veteranNetIncome,
+                  veteranOtherIncome,
+                  'view:spouseIncome': {
+                    type: 'object',
+                    properties: {
+                      spouseGrossIncome,
+                      spouseNetIncome,
+                      spouseOtherIncome,
+                    },
+                  },
+                  dependents: _.merge(dependents, {
+                    minItems: 1,
+                  }),
                 },
               },
-              dependents: _.merge(dependents, {
-                minItems: 1,
-              }),
             },
           },
         },
         deductibleExpenses: {
           path: 'household-information/deductible-expenses',
           title: 'Deductible expenses',
-          depends: data => data.discloseFinancialInformation,
+          // depends: data => data.discloseFinancialInformation,
           uiSchema: {
             'ui:title': 'Previous Calendar Year’s Deductible Expenses',
-            'ui:description': deductibleExpensesDescription,
-            deductibleMedicalExpenses: _.set(
-              'ui:validations',
-              [validateCurrency],
-              currencyUI(
-                'Amount you or your spouse paid in non-reimbursable medical expenses this past year.',
+            'ui:description': PrefillMessage,
+            'view:deductibleExpenses': {
+              'ui:description': deductibleExpensesDescription,
+              deductibleMedicalExpenses: _.set(
+                'ui:validations',
+                [validateCurrency],
+                currencyUI(
+                  'Amount you or your spouse paid in non-reimbursable medical expenses this past year.',
+                ),
               ),
-            ),
-            'view:expensesIncomeWarning1': {
-              'ui:description': expensesGreaterThanIncomeWarning,
-              'ui:options': {
-                hideIf: expensesLessThanIncome('deductibleMedicalExpenses'),
+              'view:expensesIncomeWarning1': {
+                'ui:description': expensesGreaterThanIncomeWarning,
+                'ui:options': {
+                  hideIf: expensesLessThanIncome('deductibleMedicalExpenses'),
+                },
               },
-            },
-            deductibleFuneralExpenses: _.set(
-              'ui:validations',
-              [validateCurrency],
-              currencyUI(
-                'Amount you paid in funeral or burial expenses for a deceased spouse or child this past year.',
+              deductibleFuneralExpenses: _.set(
+                'ui:validations',
+                [validateCurrency],
+                currencyUI(
+                  'Amount you paid in funeral or burial expenses for a deceased spouse or child this past year.',
+                ),
               ),
-            ),
-            'view:expensesIncomeWarning2': {
-              'ui:description': expensesGreaterThanIncomeWarning,
-              'ui:options': {
-                hideIf: expensesLessThanIncome('deductibleFuneralExpenses'),
+              'view:expensesIncomeWarning2': {
+                'ui:description': expensesGreaterThanIncomeWarning,
+                'ui:options': {
+                  hideIf: expensesLessThanIncome('deductibleFuneralExpenses'),
+                },
               },
-            },
-            deductibleEducationExpenses: currencyUI(
-              'Amount you paid for anything related to your own education (college or vocational) this past year. Do not list your dependents’ educational expenses.',
-            ),
-            'view:expensesIncomeWarning3': {
-              'ui:description': expensesGreaterThanIncomeWarning,
-              'ui:options': {
-                hideIf: expensesLessThanIncome('deductibleEducationExpenses'),
+              deductibleEducationExpenses: currencyUI(
+                'Amount you paid for anything related to your own education (college or vocational) this past year. Do not list your dependents’ educational expenses.',
+              ),
+              'view:expensesIncomeWarning3': {
+                'ui:description': expensesGreaterThanIncomeWarning,
+                'ui:options': {
+                  hideIf: expensesLessThanIncome('deductibleEducationExpenses'),
+                },
               },
             },
           },
           schema: {
             type: 'object',
-            required: [
-              'deductibleMedicalExpenses',
-              'deductibleFuneralExpenses',
-              'deductibleEducationExpenses',
-            ],
             properties: {
-              deductibleMedicalExpenses,
-              'view:expensesIncomeWarning1': emptyObjectSchema,
-              deductibleFuneralExpenses,
-              'view:expensesIncomeWarning2': emptyObjectSchema,
-              deductibleEducationExpenses,
-              'view:expensesIncomeWarning3': emptyObjectSchema,
+              'view:deductibleExpenses': {
+                type: 'object',
+                required: [
+                  'deductibleMedicalExpenses',
+                  'deductibleFuneralExpenses',
+                  'deductibleEducationExpenses',
+                ],
+                properties: {
+                  deductibleMedicalExpenses,
+                  'view:expensesIncomeWarning1': emptyObjectSchema,
+                  deductibleFuneralExpenses,
+                  'view:expensesIncomeWarning2': emptyObjectSchema,
+                  deductibleEducationExpenses,
+                  'view:expensesIncomeWarning3': emptyObjectSchema,
+                },
+              },
             },
           },
         },

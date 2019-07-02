@@ -67,16 +67,20 @@ class FacilityLocatorApp extends React.Component {
 
     return (
       <div>
-        <Breadcrumbs selectedFacility={selectedResult}>
-          {this.renderBreadcrumbs(location, selectedResult)}
-        </Breadcrumbs>
-        <div className="row">
-          <DowntimeNotification
-            appTitle="facility locator tool"
-            dependencies={[externalServices.arcgis]}
-          >
-            <div className="facility-locator">{this.props.children}</div>
-          </DowntimeNotification>
+        <div className="vads-l-grid-container large-screen:vads-u-padding-x--0">
+          <Breadcrumbs selectedFacility={selectedResult}>
+            {this.renderBreadcrumbs(location, selectedResult)}
+          </Breadcrumbs>
+        </div>
+        <div className="vads-l-grid-container large-screen:vads-u-padding-x--0">
+          <div className="vads-l-row vads-u-margin-x--neg2p5">
+            <DowntimeNotification
+              appTitle="facility locator tool"
+              dependencies={[externalServices.arcgis]}
+            >
+              <div className="facility-locator">{this.props.children}</div>
+            </DowntimeNotification>
+          </div>
         </div>
       </div>
     );

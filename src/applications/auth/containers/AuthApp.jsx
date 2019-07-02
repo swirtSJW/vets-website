@@ -352,7 +352,7 @@ export class AuthApp extends React.Component {
     }
 
     return (
-      <div className="usa-content columns small-12">
+      <div className="usa-content vads-l-grid-container large-screen:vads-u-padding-x--0">
         <h1>{header}</h1>
         <AlertBox content={alertContent} isVisible status="error" />
         <h3>What you can do:</h3>

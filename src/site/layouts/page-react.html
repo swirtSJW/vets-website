@@ -1,7 +1,9 @@
 {% include "src/site/includes/header.html" %}
 
 {% if includeBreadcrumbs == true %}
-  {% include "src/site/includes/breadcrumbs.html" %}
+  <div class="vads-l-grid-container large-screen:vads-u-padding-x--0">
+    {% include "src/site/includes/breadcrumbs.html" newGrid=true %}
+  </div>
 {% endif %}
 
 <div id="content">
